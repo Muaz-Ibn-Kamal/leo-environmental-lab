@@ -34,105 +34,105 @@ import {
 const teamMembers = [
   {
     id: 1,
-    name: "Dr. Sarah Chen",
-    role: "Lead Data Scientist",
-    expertise: "Satellite Imagery Analysis",
-    image: "/professional-woman-scientist.png",
-    location: "San Francisco, CA",
-    experience: "8 years",
-    education: "PhD in Remote Sensing, Stanford University",
-    bio: "Dr. Chen specializes in machine learning applications for satellite imagery analysis. She has published 25+ papers on environmental monitoring and leads our AI research initiatives.",
-    skills: ["Machine Learning", "Remote Sensing", "Python", "TensorFlow", "GDAL"],
-    achievements: ["NASA Early Career Award 2022", "Published 25+ peer-reviewed papers", "Led $2M NSF research grant"],
-    projects: ["Amazon Deforestation Detection System", "Arctic Ice Monitoring Platform", "Urban Heat Island Analysis"],
+    name: "Muaz Ibn Kamal",
+    role: "Team Lead",
+    expertise: "Web Developer & Designer",
+    image: "/Muaz Ibn Kamal.jpg",
+    location: "Dhaka,Bangladesh",
+    experience: "1 Year",
+    education: "Bsc in CSE, Green University of Bangladesh",
+    bio: "A passionate technology enthusiast with expertise in computer science, AI, and creative innovation. Dedicated to developing impactful solutions, driving collaboration, and fostering sustainable growth",
+    skills: ["Java Script", "React", "Python", "TensorFlow"],
+    achievements: ["Hult Prize 2025 On Campus Finalist"],
+    projects: ["Joruri Sheba", "G3 Architecture", "Bio Harvest"],
     social: {
-      linkedin: "https://linkedin.com/in/sarahchen",
-      github: "https://github.com/sarahchen",
-      email: "sarah.chen@leolab.com",
+      linkedin: "https://linkedin.com/in/muaz-ibn-kamal/",
+      github: "https://github.com/Muaz-Ibn-Kamal",
+      email: "muazibnkamal8@gmail.com",
     },
   },
   {
     id: 2,
-    name: "Marcus Rodriguez",
-    role: "Full-Stack Developer",
-    expertise: "NASA API Integration",
-    image: "/professional-man-developer.png",
-    location: "Austin, TX",
-    experience: "6 years",
-    education: "MS Computer Science, UT Austin",
-    bio: "Marcus is our technical lead for NASA API integrations and platform architecture. He has extensive experience building scalable geospatial applications.",
-    skills: ["React", "Node.js", "NASA APIs", "PostgreSQL", "Docker"],
+    name: "Md. Mirajul Islam ",
+    role: "Team Member",
+    expertise: "Climate-Tech Innovator & PR Specialist",
+    image: "/Md.Mirajul Islam.JPG",
+    location: "Dhaka,Bangladesh",
+    experience: "4+ Years (Youth Leadership & Environmental Projects",
+    education: "B.Sc in Computer Science and Engineering, United International University",
+    bio: "A dedicated climate activist and technology enthusiast, combining expertise in computer science, environmental innovation, and public relations. Focused on developing sustainable solutions and empowering youth-led initiatives to address global challenges in climate and sustainability",
+    skills: ["Public Relations", "Leadership", "Research & Data Analysis", "Environmental Sciences", "Sustainability Advocacy"],
     achievements: [
-      "NASA Space Apps Challenge Winner 2023",
-      "Built 10+ production geospatial apps",
-      "Open source contributor (5k+ GitHub stars)",
+       "Nominated for 2025 Tällberg-SNF-Eliasson Global Leadership Prize",
+  "Most Innovative Environmental Sciences CEO 2024 (South Asia)",
+  "Winner (Environment Sector) - KIDLON Junior Talent Awards 2025"
+
     ],
-    projects: ["Real-time Satellite Data Pipeline", "3D Earth Visualization Engine", "NASA API Integration Framework"],
+    projects: ["Earth’s Ants", "ANTHROGEN Lab", "Minds&Bins", "CODE RED"],
     social: {
-      linkedin: "https://linkedin.com/in/marcusrodriguez",
-      github: "https://github.com/marcusrodriguez",
-      email: "marcus.rodriguez@leolab.com",
+      linkedin:  "https://linkedin.com/in/mirajulislam003",
+      github: "https://github.com/miraj-004",
+      email: "mirajulnijhumofficial@gmail.com"
+
     },
   },
   {
     id: 3,
-    name: "Dr. Aisha Patel",
-    role: "Environmental Engineer",
-    expertise: "Climate Modeling",
-    image: "/professional-woman-engineer.png",
-    location: "Boulder, CO",
-    experience: "10 years",
-    education: "PhD Environmental Engineering, MIT",
-    bio: "Dr. Patel brings deep expertise in climate modeling and environmental systems. She previously worked at NOAA and has extensive field research experience.",
+    name: "Mahbub Anam",
+    role: "ML Engineer",
+    expertise: "ML & Data Science",
+    image: "/Mahbub Anam.jpg",
+    location: "Dhaka,Bangladesh",
+    experience: "3 years",
+    education: "Bsc in CSE, North South University",
+    bio: "Mahbub is a data scientist with a focus on environmental data analysis and machine learning. He has worked on several climate modeling projects.",
     skills: ["Climate Modeling", "Environmental Systems", "MATLAB", "R", "GIS"],
     achievements: [
-      "NOAA Outstanding Achievement Award",
-      "30+ publications in Nature, Science",
-      "IPCC Contributing Author",
+      "North South University Assistant Cyber Security Expert",
+      "Developed 5+ ML models for environmental data",
     ],
-    projects: ["Global Carbon Cycle Modeling", "Climate Change Impact Assessment", "Ecosystem Health Monitoring"],
+    projects: [" MemoryAnalyz3r", " akari-telegram", " Infinity-Creators"],
     social: {
       linkedin: "https://linkedin.com/in/aishapatel",
-      github: "https://github.com/aishapatel",
-      email: "aisha.patel@leolab.com",
+      github: "https://github.com/Rhythm113",
+      email: "mahbubanamrhythm@gmail.com",
     },
   },
   {
     id: 4,
-    name: "James Kim",
-    role: "ML Engineer",
-    expertise: "Computer Vision & AI",
-    image: "/professional-ai-engineer.png",
-    location: "Seattle, WA",
-    experience: "5 years",
-    education: "MS AI/ML, University of Washington",
-    bio: "James specializes in computer vision and deep learning for environmental applications. He previously worked at Microsoft AI Research.",
-    skills: ["PyTorch", "Computer Vision", "MLOps", "Kubernetes", "CUDA"],
+    name: "Nuren Tasnim",
+    role: "Team Member",
+    expertise:  "Sustainability Advocate & Youth Leader",
+    image: "/Nuren Tasnim.jpg",
+    location: "Dhaka,Bangladesh",
+    experience: "2 years",
+    education: "Bsc in EEE, Ahsanullah University of Science and Technology",
+    bio:  "Curious mind exploring EEE, innovation, and sustainability—driven to turn ideas into real impact.",
+    skills: ["Leadership", " sustainability", "innovation", " EEE fundamentals", "communication"],
     achievements: ["Microsoft AI Research Alumni", "3 patents in computer vision", "Top 1% Kaggle competitor"],
     projects: ["Automated Change Detection Models", "Satellite Image Classification", "Real-time Environmental Alerts"],
     social: {
-      linkedin: "https://linkedin.com/in/jameskim",
-      github: "https://github.com/jameskim",
-      email: "james.kim@leolab.com",
+      linkedin: "https://www.linkedin.com/in/tasnim-nuren/",
+      github: "",
+      email: "tasnimnuren@gmail.com",
     },
   },
   {
     id: 5,
-    name: "Elena Volkov",
-    role: "Geospatial Analyst",
-    expertise: "GIS & Remote Sensing",
-    image: "/professional-woman-geospatial-analyst.png",
-    location: "Denver, CO",
-    experience: "7 years",
-    education: "MS Geography, University of Colorado",
-    bio: "Elena is our GIS expert with extensive experience in remote sensing and spatial analysis. She specializes in large-scale environmental monitoring.",
-    skills: ["ArcGIS", "QGIS", "Remote Sensing", "Spatial Analysis", "PostGIS"],
+    name: "Rafi Ahmed Fida",
+    role: "Team Member",
+    expertise: "ML & Data Science",
+    image: "/Rafi Ahmed Fida.jpg",
+    location: "Dhaka,Bangladesh",
+    experience: "2 years",
+    education: "Bsc in CSE, East West University",
+    bio: " Rafi is a data scientist with a focus on environmental data analysis and machine learning. He has worked on several climate modeling projects.",
+    skills: ["ArcGIS", "QGIS", "Spatial Analysis", "PostGIS"],
     achievements: [
-      "ESRI Young Professional Award",
-      "Led 15+ environmental assessments",
-      "GIS certification instructor",
+      "East West University Data Science Club ",
+      "Developed 3 ML models for environmental data",
     ],
-    projects: ["Global Forest Monitoring System", "Water Resource Assessment Tools", "Land Use Change Analysis"],
+    projects: ["", "Water Resource Assessment Tools", "Land Use Change Analysis"],
     social: {
       linkedin: "https://linkedin.com/in/elenavolkov",
       github: "https://github.com/elenavolkov",
@@ -141,25 +141,23 @@ const teamMembers = [
   },
   {
     id: 6,
-    name: "Dr. Ahmed Hassan",
-    role: "Research Director",
-    expertise: "Earth System Science",
-    image: "/professional-man-research-director.png",
-    location: "Washington, DC",
-    experience: "15 years",
-    education: "PhD Earth System Science, NASA GSFC",
-    bio: "Dr. Hassan leads our research strategy and partnerships. Former NASA scientist with expertise in Earth system science and satellite missions.",
-    skills: ["Earth System Science", "Satellite Missions", "Research Strategy", "Grant Writing", "Team Leadership"],
+    name: "Raid Hossain Neloy",
+    role: "Design Lead",
+    expertise: "Graphic Designer & Illustrator",
+    image: "/Raid Hossain Neloy.jpg",
+    location: "Dhaka,Bangladesh",
+    experience: "5 years",
+    education: "BBA in Economics, Green University of Bangladesh",
+    bio: "Raid is a creative graphic designer and illustrator with a passion for visual storytelling. With over 5 years of experience, he has worked on diverse projects ranging from branding to digital art, consistently delivering compelling designs that resonate with audiences.",
+    skills: ["Adobe Creative Suite", "Illustration", "Branding", "Typography"],
     achievements: [
-      "Former NASA Principal Investigator",
-      "50+ publications, 2000+ citations",
-      "Led 3 satellite mission proposals",
+      "Freelance Graphic Designer for 50+ clients"  , "Exhibited artwork in 3 local galleries"," Won 2 design competitions"
     ],
-    projects: ["Earth System Monitoring Strategy", "NASA Partnership Development", "Climate Research Coordination"],
+    projects: ["Brand Identity for Local Startups", "Illustrated Children's Book", "Social Media Campaigns"],
     social: {
-      linkedin: "https://linkedin.com/in/ahmedhassan",
-      github: "https://github.com/ahmedhassan",
-      email: "ahmed.hassan@leolab.com",
+      linkedin: " www.linkedin.com/in/raidhossainneloy",
+      github: "",
+      email: "raidhossain40@gmail.com",
     },
   },
 ]
@@ -188,7 +186,7 @@ export default function TeamSection() {
         </div>
 
         {/* Team Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           <Card className="text-center">
             <CardContent className="p-4">
               <div className="text-2xl font-bold text-primary">50+</div>
@@ -213,7 +211,7 @@ export default function TeamSection() {
               <p className="text-sm text-muted-foreground">Countries Represented</p>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
 
         {/* Team Member Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -393,19 +391,19 @@ export default function TeamSection() {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div>
-                  <div className="text-lg font-bold text-primary mb-1">NASA</div>
-                  <p className="text-sm text-muted-foreground">Former Scientists</p>
+                  <div className="text-lg font-bold text-primary mb-1">Earth's Ants</div>
+                  <p className="text-sm text-muted-foreground">Presidential Board Member</p>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-primary mb-1">MIT/Stanford</div>
-                  <p className="text-sm text-muted-foreground">PhD Alumni</p>
+                  <div className="text-lg font-bold text-primary mb-1">GUB/UIU/NSU/EWU/AUST</div>
+                  <p className="text-sm text-muted-foreground">Student</p>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-primary mb-1">Microsoft</div>
-                  <p className="text-sm text-muted-foreground">AI Research</p>
+                  <div className="text-lg font-bold text-primary mb-1">Anthrogen Lab</div>
+                  <p className="text-sm text-muted-foreground">Founding Directors</p>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-primary mb-1">NOAA</div>
+                  <div className="text-lg font-bold text-primary mb-1">Earths Ant's</div>
                   <p className="text-sm text-muted-foreground">Climate Experts</p>
                 </div>
               </div>
