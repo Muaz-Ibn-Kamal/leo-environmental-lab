@@ -7,7 +7,7 @@ import { Suspense } from "react"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "LEO Environmental Lab - AI-Powered Geospatial Intelligence",
+  title: "LEO Environmental Lab ",
   description:
     "Advanced satellite imagery analysis and environmental monitoring using NASA APIs and real-time data processing",
   generator: "LEO Environmental Lab",
