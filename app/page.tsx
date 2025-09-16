@@ -14,6 +14,7 @@ import NASAResourcesDashboard from "@/components/nasa-resources-dashboard"
 import SafetyPredictionDashboard from "@/components/safety-prediction-dashboard"
 import SystemStatus from "@/components/system-status"
 import InteractiveHero from "@/components/interactive-hero"
+import GISMappingDashboard from "@/components/gis-mapping-dashboard"
 
 // NASA API integration hook
 function useNASAData() {
@@ -56,7 +57,7 @@ export default function HomePage() {
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <Tabs value={activeSection} onValueChange={setActiveSection} className="w-full">
-            <TabsList className="grid w-full grid-cols-10 mb-12 transition-all duration-300">
+            <TabsList className="grid w-full grid-cols-11 mb-12 transition-all duration-300">
               <TabsTrigger value="overview" className="transition-all duration-200 hover:scale-105">
                 Overview
               </TabsTrigger>
@@ -68,6 +69,9 @@ export default function HomePage() {
               </TabsTrigger>
               <TabsTrigger value="monitoring" className="transition-all duration-200 hover:scale-105">
                 Environmental
+              </TabsTrigger>
+              <TabsTrigger value="gis-mapping" className="transition-all duration-200 hover:scale-105">
+                GIS Mapping
               </TabsTrigger>
               <TabsTrigger value="3d" className="transition-all duration-200 hover:scale-105">
                 3D Visualization
@@ -142,6 +146,10 @@ export default function HomePage() {
 
             <TabsContent value="monitoring" className="animate-in fade-in-50 duration-500">
               <EnvironmentalMonitoring />
+            </TabsContent>
+
+            <TabsContent value="gis-mapping" className="animate-in fade-in-50 duration-500">
+              <GISMappingDashboard />
             </TabsContent>
 
             <TabsContent value="3d" className="animate-in fade-in-50 duration-500">

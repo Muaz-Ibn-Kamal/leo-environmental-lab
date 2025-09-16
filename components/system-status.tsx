@@ -55,6 +55,20 @@ export default function SystemStatus() {
     }
   }
 
+  const getStatusTextColor = (status: string) => {
+    switch (status) {
+      case "online":
+      case "offline":
+      case "degraded":
+      case "delayed":
+      case "training":
+      case "updating":
+        return "text-white"
+      default:
+        return "text-white"
+    }
+  }
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "online":
@@ -85,7 +99,10 @@ export default function SystemStatus() {
               <Satellite className="h-5 w-5 text-blue-500" />
               <span className="font-medium">Satellite Data Feeds</span>
             </div>
-            <Badge variant="outline" className={`${getStatusColor(status.satellite_data)} text-white border-0`}>
+            <Badge
+              variant="outline"
+              className={`${getStatusColor(status.satellite_data)} ${getStatusTextColor(status.satellite_data)} border-0`}
+            >
               {getStatusIcon(status.satellite_data)}
               {status.satellite_data}
             </Badge>
@@ -96,7 +113,10 @@ export default function SystemStatus() {
               <Brain className="h-5 w-5 text-purple-500" />
               <span className="font-medium">AI Prediction Models</span>
             </div>
-            <Badge variant="outline" className={`${getStatusColor(status.ai_models)} text-white border-0`}>
+            <Badge
+              variant="outline"
+              className={`${getStatusColor(status.ai_models)} ${getStatusTextColor(status.ai_models)} border-0`}
+            >
               {getStatusIcon(status.ai_models)}
               {status.ai_models}
             </Badge>
@@ -107,7 +127,10 @@ export default function SystemStatus() {
               <Globe className="h-5 w-5 text-green-500" />
               <span className="font-medium">Real-time Data Feeds</span>
             </div>
-            <Badge variant="outline" className={`${getStatusColor(status.real_time_feeds)} text-white border-0`}>
+            <Badge
+              variant="outline"
+              className={`${getStatusColor(status.real_time_feeds)} ${getStatusTextColor(status.real_time_feeds)} border-0`}
+            >
               {getStatusIcon(status.real_time_feeds)}
               {status.real_time_feeds}
             </Badge>
@@ -118,7 +141,10 @@ export default function SystemStatus() {
               <Activity className="h-5 w-5 text-orange-500" />
               <span className="font-medium">Prediction Engine</span>
             </div>
-            <Badge variant="outline" className={`${getStatusColor(status.prediction_engine)} text-white border-0`}>
+            <Badge
+              variant="outline"
+              className={`${getStatusColor(status.prediction_engine)} ${getStatusTextColor(status.prediction_engine)} border-0`}
+            >
               {getStatusIcon(status.prediction_engine)}
               {status.prediction_engine}
             </Badge>
