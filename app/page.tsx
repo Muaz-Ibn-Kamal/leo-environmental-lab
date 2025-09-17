@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Globe, Satellite, Activity, Shield } from "lucide-react"
-import Earth3D from "@/components/earth-3d"
+import dynamic from "next/dynamic"
 import RealTimeDashboard from "@/components/real-time-dashboard"
 import EnvironmentalMonitoring from "@/components/environmental-monitoring"
 import InteractiveFeatures from "@/components/interactive-features"
@@ -43,6 +43,21 @@ function useNASAData() {
 
   return { data, loading }
 }
+
+const Earth3D = dynamic(() => import("@/components/earth-3d"), {
+  ssr: false,
+  loading: () => (
+    <Card className="h-[600px] bg-gradient-to-br from-primary/5 to-accent/5">
+      <CardContent className="h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-20 h-20 mx-auto mb-6 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <h3 className="text-2xl font-bold mb-3">Loading 3D Earth</h3>
+          <p className="text-muted-foreground">Preparing interactive visualization...</p>
+        </div>
+      </CardContent>
+    </Card>
+  ),
+})
 
 export default function HomePage() {
   const { data: nasaData, loading } = useNASAData()

@@ -79,10 +79,16 @@ function Earth({
 }) {
   const meshRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
+  const [textureError, setTextureError] = useState(false)
   const { camera, gl } = useThree()
+  const earthTexture = useLoader(TextureLoader, "/earth-texture-blue-green-continents.jpg")
 
-  // Load Earth texture
-  const earthTexture = useLoader(TextureLoader, "/assets/3d/texture_earth.jpg")
+  useEffect(() => {
+    if (!earthTexture) {
+      console.log("[v0] Texture loading failed, using fallback")
+      setTextureError(true)
+    }
+  }, [earthTexture])
 
   // Rotate the Earth with variable speed
   useFrame((state, delta) => {
@@ -93,6 +99,8 @@ function Earth({
 
   const handleClick = (event: THREE.Event) => {
     event.stopPropagation()
+
+    if (typeof window === "undefined" || !gl?.domElement) return
 
     const raycaster = new Raycaster()
     const mouse = new Vector2()
@@ -133,11 +141,13 @@ function Earth({
   const getEarthMaterial = () => {
     const baseIntensity = 0.1 + (timeOfDay / 100) * 0.3
 
+    const texture = textureError ? null : earthTexture
+
     switch (activeLayer) {
       case "deforestation":
         return (
           <meshStandardMaterial
-            map={earthTexture}
+            map={texture}
             color="#ff6b6b"
             transparent
             opacity={0.8}
@@ -148,7 +158,7 @@ function Earth({
       case "temperature":
         return (
           <meshStandardMaterial
-            map={earthTexture}
+            map={texture}
             color="#ff4444"
             emissive="#ff2222"
             emissiveIntensity={showHeatmap ? 0.4 : baseIntensity}
@@ -158,7 +168,7 @@ function Earth({
       case "water":
         return (
           <meshStandardMaterial
-            map={earthTexture}
+            map={texture}
             color="#4dabf7"
             transparent
             opacity={0.9}
@@ -169,7 +179,7 @@ function Earth({
       case "carbon":
         return (
           <meshStandardMaterial
-            map={earthTexture}
+            map={texture}
             color="#51cf66"
             transparent
             opacity={0.85}
@@ -178,7 +188,7 @@ function Earth({
           />
         )
       default:
-        return <meshStandardMaterial map={earthTexture} emissiveIntensity={baseIntensity} />
+        return <meshStandardMaterial map={texture} emissiveIntensity={baseIntensity} color="#4a90e2" />
     }
   }
 
@@ -347,14 +357,7 @@ function CountryDataPanel({
     try {
       console.log("[v0] Fetching country data for:", code)
 
-      const response = await fetch(`/api/satellite-data?country=${code}&type=country`)
-      if (response.ok) {
-        const result = await response.json()
-        setCountryData(result.data)
-      } else {
-        // Fallback to simulated data
-        setCountryData(generateSimulatedCountryData(code))
-      }
+      setCountryData(generateSimulatedCountryData(code))
     } catch (error) {
       console.error("[v0] Error fetching country data:", error)
       setCountryData(generateSimulatedCountryData(code))
@@ -388,7 +391,7 @@ function CountryDataPanel({
   }
 
   const downloadData = () => {
-    if (countryData) {
+    if (countryData && typeof window !== "undefined") {
       const dataStr = JSON.stringify(countryData, null, 2)
       const dataBlob = new Blob([dataStr], { type: "application/json" })
       const url = URL.createObjectURL(dataBlob)
@@ -577,8 +580,10 @@ export default function Earth3D() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [showCountryPanel, setShowCountryPanel] = useState(false)
+  const [clientReady, setClientReady] = useState(false)
 
   useEffect(() => {
+    setClientReady(true)
     // Simulate loading time for 3D assets
     const timer = setTimeout(() => setIsLoading(false), 2000)
     return () => clearTimeout(timer)
@@ -607,6 +612,20 @@ export default function Earth3D() {
     { id: "carbon", name: "Carbon Levels", color: "bg-green-500", icon: Factory },
   ]
 
+  if (!clientReady) {
+    return (
+      <Card className="h-[600px] bg-gradient-to-br from-primary/5 to-accent/5">
+        <CardContent className="h-full flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-20 h-20 mx-auto mb-6 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            <h3 className="text-2xl font-bold mb-3">Initializing Client</h3>
+            <p className="text-muted-foreground mb-4">Preparing 3D visualization...</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   if (isLoading) {
     return (
       <Card className="h-[600px] bg-gradient-to-br from-primary/5 to-accent/5">
@@ -630,40 +649,49 @@ export default function Earth3D() {
     <div className="relative">
       <Card className="h-[600px] overflow-hidden">
         <CardContent className="p-0 h-full relative">
-          <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-            <ambientLight intensity={0.3 + (timeOfDay / 100) * 0.4} />
-            <pointLight position={[10, 10, 10]} intensity={0.8 + (timeOfDay / 100) * 0.5} />
-            <pointLight position={[-10, -10, -10]} intensity={0.3 + (timeOfDay / 100) * 0.2} />
-            <spotLight position={[0, 10, 0]} intensity={0.5} angle={Math.PI / 4} />
+          <div className="w-full h-full">
+            <Canvas
+              camera={{ position: [0, 0, 8], fov: 45 }}
+              onCreated={({ gl }) => {
+                gl.setClearColor("#000011")
+              }}
+            >
+              <ambientLight intensity={0.3 + (timeOfDay / 100) * 0.4} />
+              <pointLight position={[10, 10, 10]} intensity={0.8 + (timeOfDay / 100) * 0.5} />
+              <pointLight position={[-10, -10, -10]} intensity={0.3 + (timeOfDay / 100) * 0.2} />
+              <spotLight position={[0, 10, 0]} intensity={0.5} angle={Math.PI / 4} />
 
-            <Earth
-              activeLayer={activeLayer}
-              rotationSpeed={isPlaying ? rotationSpeed : 0}
-              showHeatmap={showHeatmap}
-              timeOfDay={timeOfDay}
-              onCountryClick={handleCountryClick}
-              selectedCountry={selectedCountry}
-            />
+              <Earth
+                activeLayer={activeLayer}
+                rotationSpeed={isPlaying ? rotationSpeed : 0}
+                showHeatmap={showHeatmap}
+                timeOfDay={timeOfDay}
+                onCountryClick={handleCountryClick}
+                selectedCountry={selectedCountry}
+              />
 
-            <CountryMarkers
-              selectedCountry={selectedCountry}
-              onCountrySelect={handleCountrySelect}
-              showLabels={showLabels}
-            />
+              <CountryMarkers
+                selectedCountry={selectedCountry}
+                onCountrySelect={handleCountrySelect}
+                showLabels={showLabels}
+              />
 
-            <SatelliteOrbits showOrbits={showOrbits} animationSpeed={isPlaying ? 1 : 0} />
+              <DataPoints activeLayer={activeLayer} showLabels={showLabels} />
 
-            <OrbitControls
-              enablePan={true}
-              enableZoom={true}
-              enableRotate={true}
-              minDistance={4}
-              maxDistance={20}
-              autoRotate={false}
-              autoRotateSpeed={0.5}
-            />
-            <Environment preset="night" />
-          </Canvas>
+              <SatelliteOrbits showOrbits={showOrbits} animationSpeed={isPlaying ? 1 : 0} />
+
+              <OrbitControls
+                enablePan={true}
+                enableZoom={true}
+                enableRotate={true}
+                minDistance={4}
+                maxDistance={20}
+                autoRotate={false}
+                autoRotateSpeed={0.5}
+              />
+              <Environment preset="night" />
+            </Canvas>
+          </div>
 
           <div className="absolute top-4 left-4 space-y-3">
             <div className="flex flex-wrap gap-2">
