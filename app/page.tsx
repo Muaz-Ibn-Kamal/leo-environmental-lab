@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Globe, Satellite, Activity, Shield } from "lucide-react"
-import dynamic from "next/dynamic"
 import RealTimeDashboard from "@/components/real-time-dashboard"
 import EnvironmentalMonitoring from "@/components/environmental-monitoring"
 import InteractiveFeatures from "@/components/interactive-features"
@@ -15,6 +14,8 @@ import SafetyPredictionDashboard from "@/components/safety-prediction-dashboard"
 import SystemStatus from "@/components/system-status"
 import InteractiveHero from "@/components/interactive-hero"
 import GISMappingDashboard from "@/components/gis-mapping-dashboard"
+import Earth3D from "@/components/earth-3d"
+import SatelliteSources3D from "@/components/satellite-sources-3d"
 
 // NASA API integration hook
 function useNASAData() {
@@ -43,21 +44,6 @@ function useNASAData() {
 
   return { data, loading }
 }
-
-const Earth3D = dynamic(() => import("@/components/earth-3d"), {
-  ssr: false,
-  loading: () => (
-    <Card className="h-[600px] bg-gradient-to-br from-primary/5 to-accent/5">
-      <CardContent className="h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-20 h-20 mx-auto mb-6 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <h3 className="text-2xl font-bold mb-3">Loading 3D Earth</h3>
-          <p className="text-muted-foreground">Preparing interactive visualization...</p>
-        </div>
-      </CardContent>
-    </Card>
-  ),
-})
 
 export default function HomePage() {
   const { data: nasaData, loading } = useNASAData()
@@ -174,7 +160,39 @@ export default function HomePage() {
                 </h2>
                 <p className="text-xl text-muted-foreground">Explore environmental data in three dimensions</p>
               </div>
-              <Earth3D />
+
+              <Tabs defaultValue="earth" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-8">
+                  <TabsTrigger value="earth" className="flex items-center gap-2">
+                    <Globe className="w-4 h-4" />
+                    Earth Visualization
+                  </TabsTrigger>
+                  <TabsTrigger value="satellites" className="flex items-center gap-2">
+                    <Satellite className="w-4 h-4" />
+                    Satellite Data Sources
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="earth">
+                  <div className="text-center mb-4">
+                    <h3 className="text-2xl font-bold mb-2">Interactive Earth with Environmental Data</h3>
+                    <p className="text-muted-foreground">
+                      Click on countries to explore real-time environmental metrics
+                    </p>
+                  </div>
+                  <Earth3D />
+                </TabsContent>
+
+                <TabsContent value="satellites">
+                  <div className="text-center mb-4">
+                    <h3 className="text-2xl font-bold mb-2">Our Satellite Data Network</h3>
+                    <p className="text-muted-foreground">
+                      Discover why we use each satellite for environmental monitoring
+                    </p>
+                  </div>
+                  <SatelliteSources3D />
+                </TabsContent>
+              </Tabs>
             </TabsContent>
 
             <TabsContent value="safety" className="animate-in fade-in-50 duration-500">
