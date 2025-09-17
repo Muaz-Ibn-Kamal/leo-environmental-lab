@@ -37,6 +37,7 @@
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
     "@vercel/analytics": "latest",
+    "@vercel/speed-insights": "latest",
     "child_process": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -64,7 +65,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "three": "latest",
-    "vaul": "^1.1.1"
+    "vaul": "^1.1.1",
+    "vue-router": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
