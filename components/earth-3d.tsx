@@ -97,8 +97,8 @@ function Earth({
     }
   })
 
-  const handleClick = (event: THREE.Event) => {
-    event.stopPropagation()
+  const handleClick = (event: React.PointerEvent) => {
+    // event.stopPropagation() // Removed because THREE.Event does not have stopPropagation
 
     if (typeof window === "undefined" || !gl?.domElement) return
 
@@ -495,7 +495,7 @@ function CountryDataPanel({
                       {getMetricTrend(value as number)}
                     </div>
                     <div className="text-lg font-bold">
-                      {typeof value === "number" ? value.toFixed(1) : value}
+                      {typeof value === "number" ? (value as number).toFixed(1) : String(value)}
                       {metric === "temperature" && "°C"}
                       {metric === "humidity" && "%"}
                       {metric.includes("Quality") && "%"}
