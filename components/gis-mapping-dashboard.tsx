@@ -92,11 +92,20 @@ interface Country {
   area: number
 }
 
+interface FIRMSFireData {
+  latitude: number
+  longitude: number
+  brightness: number
+  confidence: number
+  type: string
+  timestamp: string
+}
+
 interface CountryEnvironmentalData {
   country: string
   nasaData: {
     modisImagery: string[]
-    firmsData: any[]
+    firmsData: FIRMSFireData[]
     eonetEvents: any[]
     landsat: any[]
     viirs: any[]
@@ -489,7 +498,13 @@ export default function GISMappingDashboard() {
 
       console.log(` Attempting to fetch from NASA APIs with real API key...`)
 
-      const nasaData = {
+      const nasaData: {
+        modisImagery: string[];
+        firmsData: FIRMSFireData[];
+        eonetEvents: any[];
+        landsat: any[];
+        viirs: any[];
+      } = {
         modisImagery: [`/satellite-map-view-bangladesh-terrain-elevation.jpg`],
         firmsData: [],
         eonetEvents: [],
