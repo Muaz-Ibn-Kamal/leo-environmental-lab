@@ -476,7 +476,7 @@ export default function GISMappingDashboard() {
     if (!country) return
 
     setIsLoadingCountryData(true)
-    console.log(`[v0] Fetching real-time NASA LEO satellite data for ${country.name}...`)
+    console.log(` Fetching real-time NASA LEO satellite data for ${country.name}...`)
 
     try {
       const NASA_API_KEY = "8zbCujw6vfWdakWSEoegergghb3BHPUiI2GJkfd6"
@@ -487,7 +487,7 @@ export default function GISMappingDashboard() {
       yesterday.setDate(yesterday.getDate() - 1)
       const dateStr = yesterday.toISOString().split("T")[0]
 
-      console.log(`[v0] Attempting to fetch from NASA APIs with real API key...`)
+      console.log(` Attempting to fetch from NASA APIs with real API key...`)
 
       const nasaData = {
         modisImagery: [`/satellite-map-view-bangladesh-terrain-elevation.jpg`],
@@ -528,12 +528,12 @@ export default function GISMappingDashboard() {
               }
             })
 
-          console.log(`[v0] Successfully fetched ${nasaData.firmsData.length} real fire points from FIRMS API`)
+          console.log(` Successfully fetched ${nasaData.firmsData.length} real fire points from FIRMS API`)
         } else {
           throw new Error(`FIRMS API returned ${firmsResponse.status}`)
         }
       } catch (firmsError) {
-        console.log(`[v0] FIRMS API fallback - generating realistic fire data`)
+        console.log(` FIRMS API fallback - generating realistic fire data`)
         // Generate realistic fire data as fallback
         const fireCount = Math.floor(Math.random() * 15) + 5
         nasaData.firmsData = Array.from({ length: fireCount }, (_, i) => ({
@@ -573,13 +573,13 @@ export default function GISMappingDashboard() {
             })) || []
 
           console.log(
-            `[v0] Successfully fetched ${nasaData.eonetEvents.length} real environmental events from EONET API`,
+            ` Successfully fetched ${nasaData.eonetEvents.length} real environmental events from EONET API`,
           )
         } else {
           throw new Error(`EONET API returned ${eonetResponse.status}`)
         }
       } catch (eonetError) {
-        console.log(`[v0] EONET API fallback - generating realistic event data`)
+        console.log(` EONET API fallback - generating realistic event data`)
         // Generate environmental events as fallback
         const eventCount = Math.floor(Math.random() * 8) + 2
         nasaData.eonetEvents = Array.from({ length: eventCount }, (_, i) => ({
@@ -638,7 +638,7 @@ export default function GISMappingDashboard() {
         },
       }
 
-      console.log(`[v0] Successfully loaded NASA data for ${country.name}:`, {
+      console.log(` Successfully loaded NASA data for ${country.name}:`, {
         fires: nasaData.firmsData.length,
         events: nasaData.eonetEvents.length,
         viirs: nasaData.viirs.length,
@@ -646,7 +646,7 @@ export default function GISMappingDashboard() {
       })
       setCountryData(environmentalData)
     } catch (error) {
-      console.error(`[v0] Error fetching NASA data:`, error)
+      console.error(` Error fetching NASA data:`, error)
 
       // Provide fallback data even if API calls fail
       const fallbackData: CountryEnvironmentalData = {
@@ -800,7 +800,7 @@ export default function GISMappingDashboard() {
 
   const updateLayerOpacity = (layerId: string, opacity: number) => {
     // Update layer opacity in the mapping system
-    console.log(`[v0] Updating layer ${layerId} opacity to ${opacity}`)
+    console.log(` Updating layer ${layerId} opacity to ${opacity}`)
   }
 
   const togglePredictionModel = (modelId: string) => {
@@ -887,9 +887,9 @@ export default function GISMappingDashboard() {
         ]
 
         setPredictions(predictionData)
-        console.log("[v0] GIS data with predictions loaded:", { elevationData, landCoverData, predictionData })
+        console.log(" GIS data with predictions loaded:", { elevationData, landCoverData, predictionData })
       } catch (error) {
-        console.log("[v0] GIS prediction analysis simulation active")
+        console.log(" GIS prediction analysis simulation active")
       }
     }
 

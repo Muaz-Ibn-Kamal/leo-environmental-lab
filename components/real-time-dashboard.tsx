@@ -60,7 +60,7 @@ function useRealTimeData() {
     const fetchData = async () => {
       try {
         setLoading(true)
-        console.log("[v0] Fetching real-time NASA satellite data...")
+        console.log(" Fetching real-time NASA satellite data...")
 
         const response = await fetch("/api/nasa-live-data")
 
@@ -70,10 +70,10 @@ function useRealTimeData() {
 
         const result = await response.json()
 
-        console.log("[v0] Successfully fetched NASA data:", result.status)
-        console.log("[v0] Data sources:", result.data_sources)
-        console.log("[v0] Raw fire detections:", result.raw_data?.active_fires)
-        console.log("[v0] Environmental events:", result.raw_data?.environmental_events)
+        console.log(" Successfully fetched NASA data:", result.status)
+        console.log(" Data sources:", result.data_sources)
+        console.log(" Raw fire detections:", result.raw_data?.active_fires)
+        console.log(" Environmental events:", result.raw_data?.environmental_events)
 
         const transformedData = {
           currentMetrics: {
@@ -237,7 +237,7 @@ function useRealTimeData() {
         setError(null)
         setLastUpdate(new Date())
       } catch (err) {
-        console.error("[v0] Error fetching NASA data:", err)
+        console.error(" Error fetching NASA data:", err)
         setError(err.message)
 
         setData(getFallbackData())

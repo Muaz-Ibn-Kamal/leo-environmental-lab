@@ -85,7 +85,7 @@ function Earth({
 
   useEffect(() => {
     if (!earthTexture) {
-      console.log("[v0] Texture loading failed, using fallback")
+      console.log(" Texture loading failed, using fallback")
       setTextureError(true)
     }
   }, [earthTexture])
@@ -355,11 +355,11 @@ function CountryDataPanel({
   const fetchCountryData = async (code: string) => {
     setLoading(true)
     try {
-      console.log("[v0] Fetching country data for:", code)
+      console.log(" Fetching country data for:", code)
 
       setCountryData(generateSimulatedCountryData(code))
     } catch (error) {
-      console.error("[v0] Error fetching country data:", error)
+      console.error(" Error fetching country data:", error)
       setCountryData(generateSimulatedCountryData(code))
     } finally {
       setLoading(false)
@@ -590,7 +590,7 @@ export default function Earth3D() {
   }, [])
 
   const handleCountryClick = (countryCode: string, coords: [number, number]) => {
-    console.log("[v0] Country selected:", countryCode, coords)
+    console.log(" Country selected:", countryCode, coords)
     setSelectedCountry(countryCode)
     setShowCountryPanel(true)
   }
