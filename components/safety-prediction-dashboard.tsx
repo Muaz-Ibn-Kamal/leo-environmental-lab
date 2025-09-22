@@ -102,7 +102,7 @@ export default function SafetyPredictionDashboard() {
 
   const fetchSafetyData = async () => {
     setLoading(true)
-    console.log(" Fetching safety prediction data for:", selectedCountry)
+    console.log("[v0] Fetching safety prediction data for:", selectedCountry)
 
     try {
       // Simulate API calls to our AI prediction system
@@ -121,7 +121,7 @@ export default function SafetyPredictionDashboard() {
       setRiskPredictions(predictions)
       setSafetyAlerts(alerts)
     } catch (error) {
-      console.error(" Error fetching safety data:", error)
+      console.error("[v0] Error fetching safety data:", error)
       // Fallback to simulated data
       setSafetyMetrics(generateSafetyMetrics(selectedCountry))
       setRiskPredictions(generateRiskPredictions(selectedCountry, Number.parseInt(predictionHorizon)))

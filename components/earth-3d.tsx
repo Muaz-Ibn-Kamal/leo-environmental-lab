@@ -85,7 +85,7 @@ function Earth({
 
   useEffect(() => {
     if (!earthTexture) {
-      console.log(" Texture loading failed, using fallback")
+      console.log("[v0] Texture loading failed, using fallback")
       setTextureError(true)
     }
   }, [earthTexture])
@@ -97,8 +97,8 @@ function Earth({
     }
   })
 
-  const handleClick = (event: React.PointerEvent) => {
-    // event.stopPropagation() // Removed because THREE.Event does not have stopPropagation
+  const handleClick = (event: THREE.Event) => {
+    event.stopPropagation()
 
     if (typeof window === "undefined" || !gl?.domElement) return
 
@@ -355,11 +355,11 @@ function CountryDataPanel({
   const fetchCountryData = async (code: string) => {
     setLoading(true)
     try {
-      console.log(" Fetching country data for:", code)
+      console.log("[v0] Fetching country data for:", code)
 
       setCountryData(generateSimulatedCountryData(code))
     } catch (error) {
-      console.error(" Error fetching country data:", error)
+      console.error("[v0] Error fetching country data:", error)
       setCountryData(generateSimulatedCountryData(code))
     } finally {
       setLoading(false)
@@ -495,7 +495,7 @@ function CountryDataPanel({
                       {getMetricTrend(value as number)}
                     </div>
                     <div className="text-lg font-bold">
-                      {typeof value === "number" ? (value as number).toFixed(1) : String(value)}
+                      {typeof value === "number" ? value.toFixed(1) : value}
                       {metric === "temperature" && "°C"}
                       {metric === "humidity" && "%"}
                       {metric.includes("Quality") && "%"}
@@ -590,7 +590,7 @@ export default function Earth3D() {
   }, [])
 
   const handleCountryClick = (countryCode: string, coords: [number, number]) => {
-    console.log(" Country selected:", countryCode, coords)
+    console.log("[v0] Country selected:", countryCode, coords)
     setSelectedCountry(countryCode)
     setShowCountryPanel(true)
   }

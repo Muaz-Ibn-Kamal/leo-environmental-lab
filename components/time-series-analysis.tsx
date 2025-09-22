@@ -114,7 +114,7 @@ export default function TimeSeriesAnalysis({ countryCode }: { countryCode?: stri
 
   const generateTimeSeriesData = async () => {
     setLoading(true)
-    console.log(" Generating time series data for analysis")
+    console.log("[v0] Generating time series data for analysis")
 
     try {
       // Simulate API call for historical and predicted data
@@ -132,7 +132,7 @@ export default function TimeSeriesAnalysis({ countryCode }: { countryCode?: stri
       const patterns = analyzeSeasonalPatterns(historicalData)
       setSeasonalPatterns(patterns)
     } catch (error) {
-      console.error(" Error generating time series data:", error)
+      console.error("[v0] Error generating time series data:", error)
     } finally {
       setLoading(false)
     }

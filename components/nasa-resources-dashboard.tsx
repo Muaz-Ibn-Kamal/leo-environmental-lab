@@ -50,7 +50,7 @@ export default function NASAResourcesDashboard() {
         })
       }
     } catch (error) {
-      console.error(" Failed to fetch NASA data:", error)
+      console.error("[v0] Failed to fetch NASA data:", error)
       setNasaData((prev) => ({ ...prev, loading: false }))
     }
   }
