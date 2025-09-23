@@ -50,59 +50,17 @@ import {
   BellOff,
 } from "lucide-react"
 
-type RealTimeData = {
-  currentMetrics: Record<string, {
-    value: string
-    change: string
-    status: string
-    unit: string
-    description: string
-    threshold: number
-    scientificContext: string
-  }>
-  timeSeriesData: Array<Record<string, any>>
-  alerts: Array<{
-    id: number
-    type: string
-    message: string
-    time: string
-    location: string
-    impact: string
-    source: string
-  }>
-  satelliteStatus: Array<{
-    name: string
-    status: string
-    coverage: number
-    lastContact: string
-    mission: string
-  }>
-  globalStats: Array<{
-    name: string
-    value: number
-    color: string
-    trend: number
-    unit: string
-  }>
-  scientificInsights: Array<{
-    title: string
-    description: string
-    impact: string
-    timeframe: string
-  }>
-}
-
 function useRealTimeData() {
-  const [data, setData] = useState<RealTimeData | null>(null)
+  const [data, setData] = useState(null)
   const [lastUpdate, setLastUpdate] = useState(new Date())
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true)
-        console.log(" Fetching real-time NASA satellite data...")
+        console.log("[v0] Fetching real-time NASA satellite data...")
 
         const response = await fetch("/api/nasa-live-data")
 
@@ -112,85 +70,12 @@ function useRealTimeData() {
 
         const result = await response.json()
 
-        console.log(" Successfully fetched NASA data:", result.status)
-        console.log(" Data sources:", result.data_sources)
-        console.log(" Raw fire detections:", result.raw_data?.active_fires)
-        console.log(" Environmental events:", result.raw_data?.environmental_events)
+        console.log("[v0] Successfully fetched NASA data:", result.status)
+        console.log("[v0] Data sources:", result.data_sources)
+        console.log("[v0] Raw fire detections:", result.raw_data?.active_fires)
+        console.log("[v0] Environmental events:", result.raw_data?.environmental_events)
 
-        interface Metric {
-          value: string
-          change: string
-          status: string
-          unit: string
-          description: string
-          threshold: number
-          scientificContext: string
-        }
-
-        interface TimeSeriesEntry {
-          time: string
-          deforestation: number
-          carbon: number
-          water: number
-          temperature: number
-          ozone: number
-          seaLevel: number
-          biodiversity: number
-          airQuality: number
-          glacialMass: number
-          oceanPh: number
-        }
-
-        interface Alert {
-          id: number
-          type: string
-          message: string
-          time: string
-          location: string
-          impact: string
-          source: string
-        }
-
-        interface SatelliteStatus {
-          name: string
-          status: string
-          coverage: number
-          lastContact: string
-          mission: string
-        }
-
-        interface GlobalStat {
-          name: string
-          value: number
-          color: string
-          trend: number
-          unit: string
-        }
-
-        interface ScientificInsight {
-          title: string
-          description: string
-          impact: string
-          timeframe: string
-        }
-
-        interface TransformedData {
-          currentMetrics: {
-            deforestation: Metric
-            carbonLevels: Metric
-            waterQuality: Metric
-            temperature: Metric
-            ozoneLevels: Metric
-            seaLevel: Metric
-          }
-          timeSeriesData: TimeSeriesEntry[]
-          alerts: Alert[]
-          satelliteStatus: SatelliteStatus[]
-          globalStats: GlobalStat[]
-          scientificInsights: ScientificInsight[]
-        }
-
-        const transformedData: TransformedData = {
+        const transformedData = {
           currentMetrics: {
             deforestation: {
               value: result.metrics.deforestation.value.toString(),
@@ -247,7 +132,7 @@ function useRealTimeData() {
               scientificContext: "NASA satellite altimetry measurements",
             },
           },
-          timeSeriesData: Array.from({ length: 24 }, (_, i): TimeSeriesEntry => ({
+          timeSeriesData: Array.from({ length: 24 }, (_, i) => ({
             time: `${i}:00`,
             deforestation: Math.random() * 5 + 1,
             carbon: 420 + Math.random() * 10,
@@ -261,24 +146,22 @@ function useRealTimeData() {
             oceanPh: 8.1 - Math.random() * 0.3,
           })),
           alerts: [
-            ...result.alerts.map(
-              (alert: string, index: number): Alert => ({
-          id: index + 1,
-          type: result.raw_data?.high_confidence_fires > 100 ? "critical" : "warning",
-          message: alert,
-          time: "now",
-          location: "Global",
-          impact: result.raw_data?.active_disasters > 5 ? "High" : "Medium",
-          source: "NASA Real-time Data",
-              })
-            ),
+            ...result.alerts.map((alert, index) => ({
+              id: index + 1,
+              type: result.raw_data?.high_confidence_fires > 100 ? "critical" : "warning",
+              message: alert,
+              time: "now",
+              location: "Global",
+              impact: result.raw_data?.active_disasters > 5 ? "High" : "Medium",
+              source: "NASA Real-time Data",
+            })),
             {
               id: 999,
               type: result.status === "live" ? "info" : "warning",
               message:
-          result.status === "live"
-            ? `Live NASA data: ${result.raw_data?.active_fires} fire detections, ${result.raw_data?.environmental_events} events`
-            : result.error || "NASA API connection restored",
+                result.status === "live"
+                  ? `Live NASA data: ${result.raw_data?.active_fires} fire detections, ${result.raw_data?.environmental_events} events`
+                  : result.error || "NASA API connection restored",
               time: "now",
               location: "Global",
               impact: result.status === "live" ? "Real-time monitoring active" : "Data may be delayed",
@@ -329,9 +212,9 @@ function useRealTimeData() {
             {
               title: "NASA Live Data Integration",
               description:
-          result.status === "live"
-            ? `Successfully processing ${result.raw_data?.active_fires} active fires and ${result.raw_data?.environmental_events} environmental events from NASA satellites`
-            : "NASA API integration active with periodic data updates",
+                result.status === "live"
+                  ? `Successfully processing ${result.raw_data?.active_fires} active fires and ${result.raw_data?.environmental_events} environmental events from NASA satellites`
+                  : "NASA API integration active with periodic data updates",
               impact: result.status === "live" ? "High" : "Medium",
               timeframe: "Real-time",
             },
@@ -354,8 +237,8 @@ function useRealTimeData() {
         setError(null)
         setLastUpdate(new Date())
       } catch (err) {
-        console.error(" Error fetching NASA data:", err)
-        setError(typeof err === "object" && err !== null && "message" in err ? String((err as { message: any }).message) : "Unknown error")
+        console.error("[v0] Error fetching NASA data:", err)
+        setError(err.message)
 
         setData(getFallbackData())
       } finally {
@@ -725,8 +608,8 @@ export default function RealTimeDashboard() {
               </CardTitle>
               <div className="flex items-center gap-1">
                 {getStatusIcon(metric.status)}
-                <Badge variant={Number(metric.value) > metric.threshold ? "destructive" : "secondary"} className="text-xs">
-                  {Number(metric.value) > metric.threshold ? "Above Threshold" : "Within Range"}
+                <Badge variant={metric.value > metric.threshold ? "destructive" : "secondary"} className="text-xs">
+                  {metric.value > metric.threshold ? "Above Threshold" : "Within Range"}
                 </Badge>
               </div>
             </CardHeader>
@@ -750,7 +633,7 @@ export default function RealTimeDashboard() {
                 ) : (
                   <TrendingDown className="w-4 h-4" />
                 )}
-                {Number.parseFloat(metric.change) > 0 ? "+" : ""}
+                {metric.change > 0 ? "+" : ""}
                 {metric.change}% from last period
               </div>
               <p className="text-xs text-muted-foreground mb-2">{metric.description}</p>
@@ -810,7 +693,7 @@ export default function RealTimeDashboard() {
                     <YAxis />
                     <Tooltip
                       formatter={(value, name) => [
-                        `${typeof value === "number" ? value.toFixed(2) : Number(value).toFixed(2)} ${String(name).includes("carbon") ? "ppm" : String(name).includes("temp") ? "°C" : String(name).includes("ozone") ? "DU" : String(name).includes("sea") ? "mm/yr" : "%"}`,
+                        `${value.toFixed(2)} ${name.includes("carbon") ? "ppm" : name.includes("temp") ? "°C" : name.includes("ozone") ? "DU" : name.includes("sea") ? "mm/yr" : "%"}`,
                         name,
                       ]}
                     />
@@ -859,21 +742,7 @@ export default function RealTimeDashboard() {
                     <YAxis />
                     <Tooltip
                       formatter={(value, name) => [
-                        `${typeof value === "number" ? value.toFixed(2) : Number(value).toFixed(2)} ${
-                          typeof name === "string"
-                            ? name.includes("carbon")
-                              ? "ppm"
-                              : name.includes("temp")
-                              ? "°C"
-                              : name.includes("ozone")
-                              ? "DU"
-                              : name.includes("sea")
-                              ? "mm/yr"
-                              : name.includes("pH")
-                              ? "pH"
-                              : "%"
-                            : ""
-                        }`,
+                        `${value.toFixed(2)} ${name.includes("carbon") ? "ppm" : name.includes("temp") ? "°C" : name.includes("ozone") ? "DU" : name.includes("sea") ? "mm/yr" : name.includes("pH") ? "pH" : "%"}`,
                         name,
                       ]}
                     />
