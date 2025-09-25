@@ -45,12 +45,15 @@ function useNASAData() {
   return { data, loading }
 }
 
+import { EnvProvider } from "@/components/env-context"
+
 export default function HomePage() {
   const { data: nasaData, loading } = useNASAData()
   const [activeSection, setActiveSection] = useState("overview")
 
   return (
-    <div className="min-h-screen bg-background">
+    <EnvProvider>
+      <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <InteractiveHero onSectionChange={setActiveSection} />
 
@@ -233,6 +236,7 @@ export default function HomePage() {
           </Tabs>
         </div>
       </section>
-    </div>
+      </div>
+    </EnvProvider>
   )
 }

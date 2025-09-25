@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react"
+import { useEnv } from "@/components/env-context"
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber"
 import { OrbitControls, Environment, Html } from "@react-three/drei"
 import { TextureLoader, Raycaster, Vector2, Vector3 } from "three"
@@ -567,7 +568,7 @@ function CountryDataPanel({
 }
 
 export default function Earth3D() {
-  const [activeLayer, setActiveLayer] = useState("all")
+  const { selectedCountry, setSelectedCountry, activeLayer, setActiveLayer, region, setRegion, timeRange, setTimeRange } = useEnv()
   const [showOrbits, setShowOrbits] = useState(true)
   const [showLabels, setShowLabels] = useState(true)
   const [showHeatmap, setShowHeatmap] = useState(false)
@@ -577,7 +578,7 @@ export default function Earth3D() {
   const [timeOfDay, setTimeOfDay] = useState(50)
   const [showAdvancedControls, setShowAdvancedControls] = useState(false)
 
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
+  // selectedCountry is provided by context
   const [searchQuery, setSearchQuery] = useState("")
   const [showCountryPanel, setShowCountryPanel] = useState(false)
   const [clientReady, setClientReady] = useState(false)
@@ -693,7 +694,7 @@ export default function Earth3D() {
             </Canvas>
           </div>
 
-          <div className="absolute top-4 left-4 space-y-3">
+              <div className="absolute top-4 left-4 space-y-3">
             <div className="flex flex-wrap gap-2">
               {layers.map((layer) => {
                 const IconComponent = layer.icon

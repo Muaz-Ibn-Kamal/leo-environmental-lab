@@ -4,19 +4,31 @@ import NASAAPIClient from "@/lib/nasa-api-client"
 // Cache duration in seconds (5 minutes for real-time data)
 const CACHE_DURATION = 300
 
-let cachedData: any = null
-let lastFetchTime = 0
+// Use a map so we can cache per-request key (region/timeRange/country/layer)
+const cacheMap: Map<string, { data: any; fetchedAt: number }> = new Map()
 
 export async function GET(request: NextRequest) {
   try {
     const now = Date.now()
 
-    // Check if we have cached data that's still fresh
-    if (cachedData && now - lastFetchTime < CACHE_DURATION * 1000) {
+    // Allow callers to bypass the cache by adding ?force=1 to the request
+    const url = new URL(request.url)
+    const forceRefresh = url.searchParams.get("force") === "1"
+
+    // Build a cache key that includes region/timeRange/country/layer
+    const region = url.searchParams.get("region") || "global"
+    const timeRange = url.searchParams.get("timeRange") || "24h"
+    const country = url.searchParams.get("country") || ""
+    const layer = url.searchParams.get("layer") || "all"
+    const cacheKey = `${region}|${timeRange}|${country}|${layer}`
+
+    // Check if we have cached data that's still fresh for this key (unless caller forces refresh)
+    const cachedEntry = cacheMap.get(cacheKey)
+    if (!forceRefresh && cachedEntry && now - cachedEntry.fetchedAt < CACHE_DURATION * 1000) {
       return NextResponse.json({
-        ...cachedData,
+        ...cachedEntry.data,
         cached: true,
-        cache_age: Math.floor((now - lastFetchTime) / 1000),
+        cache_age: Math.floor((now - cachedEntry.fetchedAt) / 1000),
       })
     }
 
@@ -79,9 +91,8 @@ export async function GET(request: NextRequest) {
       status: "live",
     }
 
-    // Cache the processed data
-    cachedData = processedData
-    lastFetchTime = now
+  // Cache the processed data per key
+  cacheMap.set(cacheKey, { data: processedData, fetchedAt: now })
 
     console.log(
       `[v0] Successfully processed ${environmentalData.data.active_fires.length} fire detections and ${environmentalData.data.environmental_events.length} environmental events`,

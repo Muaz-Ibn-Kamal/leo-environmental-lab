@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { useEnv } from "@/components/env-context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -50,19 +51,30 @@ import {
   BellOff,
 } from "lucide-react"
 
-function useRealTimeData() {
-  const [data, setData] = useState(null)
-  const [lastUpdate, setLastUpdate] = useState(new Date())
+function useRealTimeData({ refreshInterval = 30, autoRefresh = true, region = "global", timeRange = "24h", selectedCountry = null as string | null, activeLayer = "all" as string } = {}) {
+  const [data, setData] = useState<any | null>(null)
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
+
+  // keep a stable reference to fetch so we can call it manually
+  const fetchRef = useRef<((opts?: { force?: boolean }) => Promise<void>) | null>(null)
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (opts: { force?: boolean } = {}) => {
       try {
         setLoading(true)
-        console.log("[v0] Fetching real-time NASA satellite data...")
+        setError(null)
+        console.log("[v1] Fetching real-time NASA satellite data...")
 
-        const response = await fetch("/api/nasa-live-data")
+  const qs = new URLSearchParams()
+  if (region) qs.set("region", region)
+  if (timeRange) qs.set("timeRange", timeRange)
+  if (selectedCountry) qs.set("country", String(selectedCountry))
+  if (activeLayer) qs.set("layer", String(activeLayer))
+  if (opts.force) qs.set("force", "1")
+
+  const response = await fetch(`/api/nasa-live-data?${qs.toString()}`)
 
         if (!response.ok) {
           throw new Error(`NASA API Error: ${response.status}`)
@@ -70,189 +82,113 @@ function useRealTimeData() {
 
         const result = await response.json()
 
-        console.log("[v0] Successfully fetched NASA data:", result.status)
-        console.log("[v0] Data sources:", result.data_sources)
-        console.log("[v0] Raw fire detections:", result.raw_data?.active_fires)
-        console.log("[v0] Environmental events:", result.raw_data?.environmental_events)
+        // If the API returns the processed shape we expect, use it directly.
+        // Otherwise fallback to lightweight transformation.
+        let processed: any = null
 
-        const transformedData = {
-          currentMetrics: {
-            deforestation: {
-              value: result.metrics.deforestation.value.toString(),
-              change: "0.6",
-              status: result.metrics.deforestation.trend === "increasing" ? "warning" : "good",
-              unit: result.metrics.deforestation.unit,
-              description: result.metrics.deforestation.source,
-              threshold: 2.5,
-              scientificContext: "Real-time analysis from NASA FIRMS fire detection system",
+        if (result && result.metrics && result.timeSeriesData) {
+          // route returned processedData shape
+          processed = {
+            currentMetrics: {
+              deforestation: {
+                value: String(result.metrics.deforestation?.value ?? result.currentMetrics?.deforestation?.value ?? "-"),
+                change: String(result.metrics.deforestation?.change ?? result.currentMetrics?.deforestation?.change ?? "0"),
+                status: result.metrics.deforestation?.status ?? result.currentMetrics?.deforestation?.status ?? "good",
+                unit: result.metrics.deforestation?.unit ?? "% per year",
+                description: result.metrics.deforestation?.source ?? "",
+                threshold: result.metrics.deforestation?.threshold ?? 2.5,
+                scientificContext: result.metrics.deforestation?.scientificContext ?? "",
+              },
+              carbonLevels: {
+                value: String(result.metrics.carbon_levels?.value ?? "-"),
+                change: String(result.metrics.carbon_levels?.change ?? "0"),
+                status: result.metrics.carbon_levels?.status ?? "warning",
+                unit: result.metrics.carbon_levels?.unit ?? "ppm",
+                description: result.metrics.carbon_levels?.source ?? "",
+                threshold: result.metrics.carbon_levels?.threshold ?? 415,
+                scientificContext: result.metrics.carbon_levels?.scientificContext ?? "",
+              },
+              waterQuality: {
+                value: String(result.metrics.water_quality?.value ?? "-"),
+                change: String(result.metrics.water_quality?.change ?? "0"),
+                status: result.metrics.water_quality?.status ?? "good",
+                unit: result.metrics.water_quality?.unit ?? "%",
+                description: result.metrics.water_quality?.source ?? "",
+                threshold: result.metrics.water_quality?.threshold ?? 75,
+                scientificContext: result.metrics.water_quality?.scientificContext ?? "",
+              },
+              temperature: {
+                value: String(result.metrics.temperature?.value ?? "-"),
+                change: String(result.metrics.temperature?.change ?? "0"),
+                status: result.metrics.temperature?.status ?? "good",
+                unit: result.metrics.temperature?.unit ?? "°C anomaly",
+                description: result.metrics.temperature?.source ?? "",
+                threshold: result.metrics.temperature?.threshold ?? 1.5,
+                scientificContext: result.metrics.temperature?.scientificContext ?? "",
+              },
+              ozoneLevels: {
+                value: String(result.metrics.ozone_levels?.value ?? "-"),
+                change: String(result.metrics.ozone_levels?.change ?? "0"),
+                status: result.metrics.ozone_levels?.status ?? "good",
+                unit: result.metrics.ozone_levels?.unit ?? "DU",
+                description: result.metrics.ozone_levels?.source ?? "",
+                threshold: result.metrics.ozone_levels?.threshold ?? 300,
+                scientificContext: result.metrics.ozone_levels?.scientificContext ?? "",
+              },
+              seaLevel: {
+                value: String(result.metrics.sea_level?.value ?? "-"),
+                change: String(result.metrics.sea_level?.change ?? "0"),
+                status: result.metrics.sea_level?.status ?? "good",
+                unit: result.metrics.sea_level?.unit ?? "mm/year",
+                description: result.metrics.sea_level?.source ?? "",
+                threshold: result.metrics.sea_level?.threshold ?? 3.0,
+                scientificContext: result.metrics.sea_level?.scientificContext ?? "",
+              },
             },
-            carbonLevels: {
-              value: result.metrics.carbon_levels.value.toString(),
-              change: result.metrics.carbon_levels.trend === "increasing" ? "2.4" : "-0.6",
-              status: result.metrics.carbon_levels.value > 420 ? "critical" : "warning",
-              unit: result.metrics.carbon_levels.unit,
-              description: result.metrics.carbon_levels.source,
-              threshold: 415,
-              scientificContext: "Estimated from NASA satellite fire emission analysis",
-            },
-            waterQuality: {
-              value: result.metrics.water_quality.value.toString(),
-              change: result.metrics.water_quality.trend === "stable" ? "-0.2" : "0.5",
-              status: result.metrics.water_quality.value > 80 ? "good" : "warning",
-              unit: result.metrics.water_quality.unit,
-              description: result.metrics.water_quality.source,
-              threshold: 75,
-              scientificContext: "Analysis based on NASA EONET environmental events",
-            },
-            temperature: {
-              value: result.metrics.temperature.value.toString(),
-              change: result.metrics.temperature.trend === "increasing" ? "0.11" : "-0.05",
-              status: result.metrics.temperature.value > 1.2 ? "warning" : "good",
-              unit: result.metrics.temperature.unit,
-              description: result.metrics.temperature.source,
-              threshold: 1.5,
-              scientificContext: "NASA VIIRS land surface temperature anomaly data",
-            },
-            ozoneLevels: {
-              value: result.metrics.ozone_levels.value.toString(),
-              change: result.metrics.ozone_levels.trend === "variable" ? "0.6" : "-0.3",
-              status: result.metrics.ozone_levels.value > 300 ? "good" : "warning",
-              unit: result.metrics.ozone_levels.unit,
-              description: result.metrics.ozone_levels.source,
-              threshold: 300,
-              scientificContext: "Impact assessment from NASA fire and pollution monitoring",
-            },
-            seaLevel: {
-              value: result.metrics.sea_level.value.toString(),
-              change: result.metrics.sea_level.trend === "increasing" ? "-0.09" : "0.12",
-              status: result.metrics.sea_level.value > 3.0 ? "warning" : "good",
-              unit: result.metrics.sea_level.unit,
-              description: result.metrics.sea_level.source,
-              threshold: 3.0,
-              scientificContext: "NASA satellite altimetry measurements",
-            },
-          },
-          timeSeriesData: Array.from({ length: 24 }, (_, i) => ({
-            time: `${i}:00`,
-            deforestation: Math.random() * 5 + 1,
-            carbon: 420 + Math.random() * 10,
-            water: 80 + Math.random() * 15,
-            temperature: 1.0 + Math.random() * 0.5,
-            ozone: 290 + Math.random() * 20,
-            seaLevel: 3.4 + Math.random() * 0.6,
-            biodiversity: 70 + Math.random() * 20,
-            airQuality: 60 + Math.random() * 30,
-            glacialMass: -(Math.random() * 150 + 50),
-            oceanPh: 8.1 - Math.random() * 0.3,
-          })),
-          alerts: [
-            ...result.alerts.map((alert, index) => ({
-              id: index + 1,
-              type: result.raw_data?.high_confidence_fires > 100 ? "critical" : "warning",
-              message: alert,
-              time: "now",
-              location: "Global",
-              impact: result.raw_data?.active_disasters > 5 ? "High" : "Medium",
-              source: "NASA Real-time Data",
-            })),
-            {
-              id: 999,
-              type: result.status === "live" ? "info" : "warning",
-              message:
-                result.status === "live"
-                  ? `Live NASA data: ${result.raw_data?.active_fires} fire detections, ${result.raw_data?.environmental_events} events`
-                  : result.error || "NASA API connection restored",
-              time: "now",
-              location: "Global",
-              impact: result.status === "live" ? "Real-time monitoring active" : "Data may be delayed",
-              source: "NASA API Status",
-            },
-          ],
-          satelliteStatus: [
-            {
-              name: "MODIS Terra",
-              status: "active",
-              coverage: 95,
-              lastContact: "30s ago",
-              mission: "Land/Ocean monitoring",
-            },
-            {
-              name: "Landsat 8",
-              status: "active",
-              coverage: 87,
-              lastContact: "2m ago",
-              mission: "Land surface imaging",
-            },
-            {
-              name: "Sentinel-2A",
-              status: "maintenance",
-              coverage: 0,
-              lastContact: "4h ago",
-              mission: "High-res optical imaging",
-            },
-            { name: "GOES-16", status: "active", coverage: 92, lastContact: "1m ago", mission: "Weather monitoring" },
-            { name: "OCO-2", status: "active", coverage: 78, lastContact: "5m ago", mission: "CO2 measurements" },
-            {
-              name: "Sentinel-3",
-              status: "active",
-              coverage: 89,
-              lastContact: "1m ago",
-              mission: "Ocean/land monitoring",
-            },
-          ],
-          globalStats: [
-            { name: "Forest Cover", value: 68, color: "#10b981", trend: -0.8, unit: "% remaining" },
-            { name: "Ocean Health", value: 45, color: "#3b82f6", trend: -1.2, unit: "% healthy" },
-            { name: "Air Quality", value: 52, color: "#f59e0b", trend: 0.3, unit: "% good" },
-            { name: "Biodiversity", value: 23, color: "#ef4444", trend: -2.1, unit: "% stable" },
-            { name: "Freshwater", value: 71, color: "#06b6d4", trend: -0.5, unit: "% accessible" },
-            { name: "Soil Health", value: 58, color: "#8b5cf6", trend: -0.9, unit: "% fertile" },
-          ],
-          scientificInsights: [
-            {
-              title: "NASA Live Data Integration",
-              description:
-                result.status === "live"
-                  ? `Successfully processing ${result.raw_data?.active_fires} active fires and ${result.raw_data?.environmental_events} environmental events from NASA satellites`
-                  : "NASA API integration active with periodic data updates",
-              impact: result.status === "live" ? "High" : "Medium",
-              timeframe: "Real-time",
-            },
-            {
-              title: "Fire Detection Analysis",
-              description: `${result.raw_data?.high_confidence_fires} high-confidence fire detections from NASA FIRMS VIIRS/MODIS`,
-              impact: result.raw_data?.high_confidence_fires > 50 ? "Critical" : "Medium",
-              timeframe: "Current",
-            },
-            {
-              title: "Environmental Event Monitoring",
-              description: `${result.raw_data?.active_disasters} active natural disasters tracked by NASA EONET`,
-              impact: result.raw_data?.active_disasters > 5 ? "High" : "Low",
-              timeframe: "Ongoing",
-            },
-          ],
+            timeSeriesData: result.timeSeriesData ?? result.timeSeries ?? [],
+            alerts: result.alerts ?? result.data?.alerts ?? [],
+            satelliteStatus: result.satelliteStatus ?? result.satellite_status ?? [],
+            globalStats: result.globalStats ?? result.global_stats ?? [],
+            scientificInsights: result.scientificInsights ?? result.scientific_insights ?? [],
+          }
+        } else {
+          // fallback: build a lightweight shape
+          processed = getFallbackData()
         }
 
-        setData(transformedData)
-        setError(null)
+        setData(processed)
         setLastUpdate(new Date())
-      } catch (err) {
-        console.error("[v0] Error fetching NASA data:", err)
-        setError(err.message)
-
+      } catch (err: any) {
+        console.error("[v1] Error fetching NASA data:", err)
+        setError(err?.message ?? String(err))
         setData(getFallbackData())
       } finally {
         setLoading(false)
       }
     }
 
+  // store a reference so callers can manually refresh
+  fetchRef.current = (opts?: { force?: boolean }) => fetchData(opts)
+
+    // Trigger an initial fetch
     fetchData()
-    const interval = setInterval(fetchData, 30000) // Update every 30 seconds
 
-    return () => clearInterval(interval)
-  }, [])
+    // Manage polling according to autoRefresh and refreshInterval
+    let intervalId: number | undefined
+    if (autoRefresh) {
+      intervalId = window.setInterval(fetchData, refreshInterval * 1000)
+    }
 
-  return { data, lastUpdate, loading, error }
+    return () => {
+      if (intervalId) window.clearInterval(intervalId)
+    }
+  }, [refreshInterval, autoRefresh, region, timeRange, selectedCountry, activeLayer])
+
+  const refreshNow = async () => {
+    if (fetchRef.current) await fetchRef.current({ force: true })
+  }
+
+  return { data, lastUpdate, loading, error, refreshNow }
 }
 
 function getFallbackData() {
@@ -389,17 +325,24 @@ function getFallbackData() {
 }
 
 export default function RealTimeDashboard() {
-  const { data, lastUpdate, loading, error } = useRealTimeData()
+  const { selectedCountry, activeLayer, region, timeRange, setRegion, setTimeRange } = useEnv()
   const [selectedMetric, setSelectedMetric] = useState("deforestation")
   const [autoRefresh, setAutoRefresh] = useState(true)
   const [refreshInterval, setRefreshInterval] = useState(30)
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
-  const [selectedTimeRange, setSelectedTimeRange] = useState("24h")
-  const [selectedRegion, setSelectedRegion] = useState("global")
   const [alertsEnabled, setAlertsEnabled] = useState(true)
   const [isPlaying, setIsPlaying] = useState(true)
   const [playbackSpeed, setPlaybackSpeed] = useState(1)
   const [selectedChart, setSelectedChart] = useState("line")
+
+  const { data, lastUpdate, loading, error, refreshNow } = useRealTimeData({
+    refreshInterval,
+    autoRefresh,
+    region,
+    timeRange,
+    selectedCountry: selectedCountry,
+    activeLayer: activeLayer,
+  })
 
   if (loading || !data) {
     return (
@@ -473,9 +416,27 @@ export default function RealTimeDashboard() {
               <span className="text-green-600 ml-2">🛰️ Live NASA Satellite Data</span>
             )}
           </p>
+          {/* Show cache metadata if present in response */}
+          {data && (data as any).cached !== undefined && (
+            <div className="mt-2">
+              {(data as any).cached ? (
+                <Badge variant="outline" className="text-xs">
+                  Cached • {(data as any).cache_age}s old
+                </Badge>
+              ) : (
+                <Badge variant="secondary" className="text-xs">
+                  Fresh
+                </Badge>
+              )}
+            </div>
+          )}
+          <div className="text-sm text-muted-foreground mt-2">
+            <span className="mr-4">Selected country: {selectedCountry ?? "—"}</span>
+            <span>Active layer: {activeLayer}</span>
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
+          <Select value={timeRange} onValueChange={(v: string) => setTimeRange(v)}>
             <SelectTrigger className="w-24">
               <SelectValue />
             </SelectTrigger>
@@ -488,7 +449,7 @@ export default function RealTimeDashboard() {
             </SelectContent>
           </Select>
 
-          <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+          <Select value={region} onValueChange={(v: string) => setRegion(v)}>
             <SelectTrigger className="w-32">
               <SelectValue />
             </SelectTrigger>
@@ -527,6 +488,11 @@ export default function RealTimeDashboard() {
             Auto Refresh
           </Button>
 
+          <Button variant="secondary" size="sm" onClick={() => refreshNow && refreshNow()}>
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh Now
+          </Button>
+
           <Button variant="outline" size="sm">
             <Download className="w-4 h-4 mr-2" />
             Export
@@ -545,14 +511,14 @@ export default function RealTimeDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="space-y-2">
                 <Label>Refresh Interval (seconds)</Label>
-                <Slider
-                  value={[refreshInterval]}
-                  onValueChange={(value) => setRefreshInterval(value[0])}
-                  max={300}
-                  min={5}
-                  step={5}
-                  className="w-full"
-                />
+                      <Slider
+                        value={[refreshInterval]}
+                        onValueChange={(value: number[]) => setRefreshInterval(value[0])}
+                        max={300}
+                        min={5}
+                        step={5}
+                        className="w-full"
+                      />
                 <div className="text-xs text-muted-foreground">{refreshInterval}s</div>
               </div>
 
@@ -560,7 +526,7 @@ export default function RealTimeDashboard() {
                 <Label>Playback Speed</Label>
                 <Slider
                   value={[playbackSpeed]}
-                  onValueChange={(value) => setPlaybackSpeed(value[0])}
+                  onValueChange={(value: number[]) => setPlaybackSpeed(value[0])}
                   max={5}
                   min={0.1}
                   step={0.1}
@@ -593,7 +559,7 @@ export default function RealTimeDashboard() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Object.entries(data.currentMetrics).map(([key, metric]) => (
+        {(Object.entries(data.currentMetrics as Record<string, any>) as [string, any][]).map(([key, metric]: [string, any]) => (
           <Card
             key={key}
             className={`cursor-pointer transition-all hover:scale-105 hover:shadow-lg ${
@@ -607,19 +573,19 @@ export default function RealTimeDashboard() {
                 {key.replace(/([A-Z])/g, " $1").trim()}
               </CardTitle>
               <div className="flex items-center gap-1">
-                {getStatusIcon(metric.status)}
-                <Badge variant={metric.value > metric.threshold ? "destructive" : "secondary"} className="text-xs">
-                  {metric.value > metric.threshold ? "Above Threshold" : "Within Range"}
+                {getStatusIcon((metric as any).status)}
+                <Badge variant={(metric as any).value > (metric as any).threshold ? "destructive" : "secondary"} className="text-xs">
+                  {(metric as any).value > (metric as any).threshold ? "Above Threshold" : "Within Range"}
                 </Badge>
               </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold mb-2">
-                {metric.value} {metric.unit}
+                {(metric as any).value} {(metric as any).unit}
               </div>
               <div
                 className={`text-sm flex items-center gap-1 mb-2 ${
-                  Number.parseFloat(metric.change) > 0
+                  Number.parseFloat((metric as any).change) > 0
                     ? key === "deforestation" || key === "carbonLevels" || key === "temperature" || key === "seaLevel"
                       ? "text-red-600"
                       : "text-green-600"
@@ -628,18 +594,18 @@ export default function RealTimeDashboard() {
                       : "text-red-600"
                 }`}
               >
-                {Number.parseFloat(metric.change) > 0 ? (
+                {Number.parseFloat((metric as any).change) > 0 ? (
                   <TrendingUp className="w-4 h-4" />
                 ) : (
                   <TrendingDown className="w-4 h-4" />
                 )}
-                {metric.change > 0 ? "+" : ""}
-                {metric.change}% from last period
+                {(metric as any).change > 0 ? "+" : ""}
+                {(metric as any).change}% from last period
               </div>
-              <p className="text-xs text-muted-foreground mb-2">{metric.description}</p>
-              <p className="text-xs text-blue-600 font-medium">{metric.scientificContext}</p>
+              <p className="text-xs text-muted-foreground mb-2">{(metric as any).description}</p>
+              <p className="text-xs text-blue-600 font-medium">{(metric as any).scientificContext}</p>
               <Progress
-                value={Math.abs(Number.parseFloat(metric.value))}
+                value={Math.abs(Number.parseFloat((metric as any).value))}
                 className="h-2 mt-2"
                 max={key === "carbonLevels" ? 500 : key === "ozoneLevels" ? 400 : 100}
               />
@@ -653,7 +619,7 @@ export default function RealTimeDashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Environmental Trends - {selectedTimeRange.toUpperCase()}</CardTitle>
+                <CardTitle>Environmental Trends - {timeRange.toUpperCase()}</CardTitle>
                 <CardDescription>
                   Real-time monitoring across key environmental indicators • Data sources: MODIS, Landsat, Sentinel,
                   NOAA
@@ -692,8 +658,8 @@ export default function RealTimeDashboard() {
                     <XAxis dataKey="time" />
                     <YAxis />
                     <Tooltip
-                      formatter={(value, name) => [
-                        `${value.toFixed(2)} ${name.includes("carbon") ? "ppm" : name.includes("temp") ? "°C" : name.includes("ozone") ? "DU" : name.includes("sea") ? "mm/yr" : "%"}`,
+                      formatter={(value: any, name: any) => [
+                        `${Number(value).toFixed(2)} ${String(name).includes("carbon") ? "ppm" : String(name).includes("temp") ? "°C" : String(name).includes("ozone") ? "DU" : String(name).includes("sea") ? "mm/yr" : "%"}`,
                         name,
                       ]}
                     />
@@ -741,8 +707,8 @@ export default function RealTimeDashboard() {
                     <XAxis dataKey="time" />
                     <YAxis />
                     <Tooltip
-                      formatter={(value, name) => [
-                        `${value.toFixed(2)} ${name.includes("carbon") ? "ppm" : name.includes("temp") ? "°C" : name.includes("ozone") ? "DU" : name.includes("sea") ? "mm/yr" : name.includes("pH") ? "pH" : "%"}`,
+                      formatter={(value: any, name: any) => [
+                        `${Number(value).toFixed(2)} ${String(name).includes("carbon") ? "ppm" : String(name).includes("temp") ? "°C" : String(name).includes("ozone") ? "DU" : String(name).includes("sea") ? "mm/yr" : String(name).includes("pH") ? "pH" : "%"}`,
                         name,
                       ]}
                     />
@@ -807,7 +773,7 @@ export default function RealTimeDashboard() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={data.globalStats}
+                      data={data.globalStats}
                     cx="50%"
                     cy="50%"
                     innerRadius={60}
@@ -815,17 +781,17 @@ export default function RealTimeDashboard() {
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {data.globalStats.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
+                      {(data.globalStats as any[]).map((entry: any, index: number) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
                   </Pie>
-                  <Tooltip formatter={(value, name) => [`${value}%`, name]} />
+                    <Tooltip formatter={(value: any, name: any) => [`${value}%`, name]} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
             <div className="grid grid-cols-1 gap-3 mt-4">
-              {data.globalStats.map((stat, index) => (
-                <div key={index} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+                {(data.globalStats as any[]).map((stat: any, index: number) => (
+                  <div key={index} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: stat.color }} />
                     <span className="text-sm font-medium">{stat.name}</span>
@@ -854,7 +820,7 @@ export default function RealTimeDashboard() {
             <CardDescription>NASA & ESA satellite constellation status</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {data.satelliteStatus.map((satellite, index) => (
+            {(data.satelliteStatus as any[]).map((satellite: any, index: number) => (
               <div key={index} className="flex items-center justify-between p-3 rounded-lg border">
                 <div className="flex items-center gap-3">
                   <div
@@ -893,7 +859,7 @@ export default function RealTimeDashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {data.alerts.map((alert) => (
+            {(data.alerts as any[]).map((alert: any) => (
               <div
                 key={alert.id}
                 className={`flex items-start gap-3 p-4 rounded-lg border ${
@@ -943,7 +909,7 @@ export default function RealTimeDashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {data.scientificInsights.map((insight, index) => (
+            {(data.scientificInsights as any[]).map((insight: any, index: number) => (
               <div key={index} className="p-4 rounded-lg border bg-gradient-to-br from-blue-50 to-purple-50">
                 <h4 className="font-semibold mb-2">{insight.title}</h4>
                 <p className="text-sm text-muted-foreground mb-3">{insight.description}</p>
