@@ -1,6 +1,10 @@
 "use client"
 
+<<<<<<< HEAD
 import { useEffect, useState } from "react"
+=======
+import { useState } from "react"
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -23,6 +27,7 @@ import {
   Filter,
 } from "lucide-react"
 
+<<<<<<< HEAD
 // Hook: fetch live environmental data from backend
 function useLiveEnvironmentalData() {
   const [data, setData] = useState<any | null>(null)
@@ -125,6 +130,9 @@ function useLiveEnvironmentalData() {
 }
 
 // Fallback environmental monitoring data
+=======
+// Environmental monitoring data
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 const environmentalData = {
   deforestation: {
     current: 2.3,
@@ -281,12 +289,19 @@ const getSeverityColor = (severity: string) => {
 
 export default function EnvironmentalMonitoring() {
   const [activeMetric, setActiveMetric] = useState("deforestation")
+<<<<<<< HEAD
   const [selectedRegion, setSelectedRegion] = useState<any | null>(null)
   const [showHotspots, setShowHotspots] = useState(true)
   const { data: liveData, hotspots: liveHotspots, loading, error } = useLiveEnvironmentalData()
 
   const dataset = liveData || environmentalData
   const currentData = dataset[activeMetric]
+=======
+  const [selectedRegion, setSelectedRegion] = useState(null)
+  const [showHotspots, setShowHotspots] = useState(true)
+
+  const currentData = environmentalData[activeMetric]
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 
   return (
     <div className="space-y-8">
@@ -294,10 +309,14 @@ export default function EnvironmentalMonitoring() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-3xl font-bold">Environmental Monitoring</h2>
+<<<<<<< HEAD
           <p className="text-muted-foreground">
             Real-time analysis of global environmental indicators
             {loading ? " • Updating..." : error ? ` • API error: ${error}` : " • Live NASA data"}
           </p>
+=======
+          <p className="text-muted-foreground">Real-time analysis of global environmental indicators</p>
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm">
@@ -317,7 +336,11 @@ export default function EnvironmentalMonitoring() {
 
       {/* Metric Selection */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<<<<<<< HEAD
         {Object.entries(dataset).map(([key, data]) => (
+=======
+        {Object.entries(environmentalData).map(([key, data]) => (
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
           <Card
             key={key}
             className={`cursor-pointer transition-all hover:scale-105 ${
@@ -473,7 +496,11 @@ export default function EnvironmentalMonitoring() {
           <CardContent>
             {showHotspots && (
               <div className="space-y-4">
+<<<<<<< HEAD
                 {(liveHotspots.length ? liveHotspots : hotspots).map((hotspot) => (
+=======
+                {hotspots.map((hotspot) => (
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
                   <div key={hotspot.id} className="p-3 rounded-lg border">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">

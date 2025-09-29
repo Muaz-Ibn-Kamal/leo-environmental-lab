@@ -16,9 +16,12 @@ import InteractiveHero from "@/components/interactive-hero"
 import GISMappingDashboard from "@/components/gis-mapping-dashboard"
 import Earth3D from "@/components/earth-3d"
 import SatelliteSources3D from "@/components/satellite-sources-3d"
+<<<<<<< HEAD
 import ConjunctionDashboard from "@/components/conjunction-dashboard"
 import LEOBusinessModel from "@/components/leo-business-model"
 import LEOInspectionService from "@/components/leo-inspection-service"
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 
 // NASA API integration hook
 function useNASAData() {
@@ -52,6 +55,7 @@ export default function HomePage() {
   const { data: nasaData, loading } = useNASAData()
   const [activeSection, setActiveSection] = useState("overview")
 
+<<<<<<< HEAD
   // Handle mobile navigation - redirect conjunctions to safety on mobile
   const handleSectionChange = (section: string) => {
     if (section === "conjunctions" && window.innerWidth < 768) {
@@ -87,11 +91,14 @@ export default function HomePage() {
     { id: "inspection-service", label: "Inspection Service", icon: "", status: "planning" }
   ]
 
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <InteractiveHero onSectionChange={setActiveSection} />
 
+<<<<<<< HEAD
       {/* Project Status Banner */}
       <div className="bg-gradient-to-r from-blue-50 to-green-50 border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -154,6 +161,46 @@ export default function HomePage() {
                   )}
                 </TabsTrigger>
               ))}
+=======
+      {/* Main Content Tabs */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <Tabs value={activeSection} onValueChange={setActiveSection} className="w-full">
+            <TabsList className="grid w-full grid-cols-11 mb-12 transition-all duration-300">
+              <TabsTrigger value="overview" className="transition-all duration-200 hover:scale-105">
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="nasa-resources" className="transition-all duration-200 hover:scale-105">
+                NASA Resources
+              </TabsTrigger>
+              <TabsTrigger value="dashboard" className="transition-all duration-200 hover:scale-105">
+                Live Dashboard
+              </TabsTrigger>
+              <TabsTrigger value="monitoring" className="transition-all duration-200 hover:scale-105">
+                Environmental
+              </TabsTrigger>
+              <TabsTrigger value="gis-mapping" className="transition-all duration-200 hover:scale-105">
+                GIS Mapping
+              </TabsTrigger>
+              <TabsTrigger value="3d" className="transition-all duration-200 hover:scale-105">
+                3D Visualization
+              </TabsTrigger>
+              <TabsTrigger value="safety" className="transition-all duration-200 hover:scale-105">
+                Safety Predictions
+              </TabsTrigger>
+              <TabsTrigger value="interactive" className="transition-all duration-200 hover:scale-105">
+                Interactive
+              </TabsTrigger>
+              <TabsTrigger value="status" className="transition-all duration-200 hover:scale-105">
+                System Status
+              </TabsTrigger>
+              <TabsTrigger value="team" className="transition-all duration-200 hover:scale-105">
+                Team
+              </TabsTrigger>
+              <TabsTrigger value="business" className="transition-all duration-200 hover:scale-105">
+                Business Model
+              </TabsTrigger>
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
             </TabsList>
 
             <TabsContent value="overview" className="space-y-12 animate-in fade-in-50 duration-500">
@@ -162,6 +209,7 @@ export default function HomePage() {
                   Environmental Intelligence Platform
                 </h2>
                 <p className="text-xl text-muted-foreground">Comprehensive monitoring powered by NASA satellite data</p>
+<<<<<<< HEAD
                 
                 {/* Project Timeline */}
                 <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border">
@@ -190,6 +238,8 @@ export default function HomePage() {
                     LEO Environmental Lab • Active Development 2025 • Full Deployment 2026
                   </div>
                 </div>
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -297,6 +347,7 @@ export default function HomePage() {
               <SafetyPredictionDashboard />
             </TabsContent>
 
+<<<<<<< HEAD
             <TabsContent value="conjunctions" className="animate-in fade-in-50 duration-500">
               <div className="text-center mb-8">
                 <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
@@ -307,6 +358,8 @@ export default function HomePage() {
               <ConjunctionDashboard />
             </TabsContent>
 
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
             <TabsContent value="interactive" className="animate-in fade-in-50 duration-500">
               <InteractiveFeatures />
             </TabsContent>
@@ -330,6 +383,7 @@ export default function HomePage() {
             <TabsContent value="business" className="animate-in fade-in-50 duration-500">
               <BusinessModelShowcase />
             </TabsContent>
+<<<<<<< HEAD
 
             <TabsContent value="leo-business" className="animate-in fade-in-50 duration-500">
               <div className="text-center mb-8">
@@ -354,6 +408,8 @@ export default function HomePage() {
               </div>
               <LEOInspectionService />
             </TabsContent>
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
           </Tabs>
         </div>
       </section>

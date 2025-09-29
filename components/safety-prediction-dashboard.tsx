@@ -88,12 +88,15 @@ export default function SafetyPredictionDashboard() {
   const [predictionHorizon, setPredictionHorizon] = useState("12") // months
   const [autoRefresh, setAutoRefresh] = useState(false)
   const [showTimeSeriesAnalysis, setShowTimeSeriesAnalysis] = useState(false)
+<<<<<<< HEAD
   const [aiModelStatus, setAiModelStatus] = useState<{
     status: string
     processingTime: number
     dataQuality: number
     lastUpdate: string
   } | null>(null)
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 
   useEffect(() => {
     fetchSafetyData()
@@ -108,6 +111,7 @@ export default function SafetyPredictionDashboard() {
 
   const fetchSafetyData = async () => {
     setLoading(true)
+<<<<<<< HEAD
     console.log("[v0] Fetching real-time AI safety prediction data for:", selectedCountry)
 
     try {
@@ -200,6 +204,28 @@ export default function SafetyPredictionDashboard() {
       }
     } catch (error) {
       console.error("[v0] Error fetching real-time safety data:", error)
+=======
+    console.log("[v0] Fetching safety prediction data for:", selectedCountry)
+
+    try {
+      // Simulate API calls to our AI prediction system
+      const [metricsResponse, predictionsResponse, alertsResponse] = await Promise.all([
+        fetch(`/api/ai-predictions?country=${selectedCountry}&type=safety`),
+        fetch(`/api/ai-predictions?country=${selectedCountry}&type=risk&horizon=${predictionHorizon}`),
+        fetch(`/api/safety-alerts?country=${selectedCountry}`),
+      ])
+
+      // For demo purposes, generate simulated data
+      const metrics = generateSafetyMetrics(selectedCountry)
+      const predictions = generateRiskPredictions(selectedCountry, Number.parseInt(predictionHorizon))
+      const alerts = generateSafetyAlerts(selectedCountry)
+
+      setSafetyMetrics(metrics)
+      setRiskPredictions(predictions)
+      setSafetyAlerts(alerts)
+    } catch (error) {
+      console.error("[v0] Error fetching safety data:", error)
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
       // Fallback to simulated data
       setSafetyMetrics(generateSafetyMetrics(selectedCountry))
       setRiskPredictions(generateRiskPredictions(selectedCountry, Number.parseInt(predictionHorizon)))
@@ -628,6 +654,7 @@ export default function SafetyPredictionDashboard() {
                           <div className="mt-4 pt-4 border-t">
                             <div className="flex items-center justify-between text-sm text-muted-foreground">
                               <span>AI Confidence: {(prediction.confidence * 100).toFixed(0)}%</span>
+<<<<<<< HEAD
                               <span>Model: Real-time Environmental Risk Predictor v2.0</span>
                             </div>
                             {prediction.aiAnalysis && (
@@ -650,6 +677,10 @@ export default function SafetyPredictionDashboard() {
                                 </div>
                               </div>
                             )}
+=======
+                              <span>Model: Environmental Risk Predictor v2.1</span>
+                            </div>
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
                           </div>
                         </div>
                       ))}
@@ -738,6 +769,7 @@ export default function SafetyPredictionDashboard() {
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Real-time AI Model Status */}
       {aiModelStatus && (
         <Card className="border-green-200 bg-green-50/50">
@@ -775,6 +807,8 @@ export default function SafetyPredictionDashboard() {
         </Card>
       )}
 
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
       {/* Status Bar */}
       <Card>
         <CardContent className="p-4">
@@ -790,7 +824,11 @@ export default function SafetyPredictionDashboard() {
               </span>
               <span className="flex items-center gap-1">
                 <Brain className="w-4 h-4" />
+<<<<<<< HEAD
                 AI Model: Real-time Environmental Safety Predictor v2.0
+=======
+                AI Model: Environmental Safety Predictor v3.2
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
               </span>
             </div>
             <div className="flex items-center gap-2">

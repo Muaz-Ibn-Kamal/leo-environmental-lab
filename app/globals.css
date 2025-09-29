@@ -364,6 +364,7 @@
 .energy-button:hover::after {
   opacity: 1;
 }
+<<<<<<< HEAD
 
 /* Hide horizontal scrollbar on mobile tab lists */
 .no-scrollbar::-webkit-scrollbar {
@@ -373,3 +374,5 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b

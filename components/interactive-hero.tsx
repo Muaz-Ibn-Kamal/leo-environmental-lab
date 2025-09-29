@@ -1,7 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
+<<<<<<< HEAD
 import { useIsMobile } from "@/hooks/use-mobile"
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -17,7 +20,10 @@ interface FloatingParticle {
 }
 
 export default function InteractiveHero({ onSectionChange }: { onSectionChange: (section: string) => void }) {
+<<<<<<< HEAD
   const isMobile = useIsMobile()
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [particles, setParticles] = useState<FloatingParticle[]>([])
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
@@ -54,6 +60,7 @@ export default function InteractiveHero({ onSectionChange }: { onSectionChange: 
     return () => clearInterval(interval)
   }, [])
 
+<<<<<<< HEAD
   // Track mouse movement (desktop only)
   useEffect(() => {
     if (isMobile) return
@@ -63,6 +70,17 @@ export default function InteractiveHero({ onSectionChange }: { onSectionChange: 
     window.addEventListener("mousemove", handleMouseMove)
     return () => window.removeEventListener("mousemove", handleMouseMove)
   }, [isMobile])
+=======
+  // Track mouse movement
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY })
+    }
+
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
+  }, [])
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 
   const features = [
     {
@@ -121,6 +139,7 @@ export default function InteractiveHero({ onSectionChange }: { onSectionChange: 
           />
         ))}
 
+<<<<<<< HEAD
       {/* Mouse Follower (desktop only) */}
       {!isMobile && (
         <div
@@ -132,6 +151,17 @@ export default function InteractiveHero({ onSectionChange }: { onSectionChange: 
           }}
         />
       )}
+=======
+      {/* Mouse Follower */}
+      <div
+        className="fixed w-6 h-6 rounded-full bg-primary/20 pointer-events-none z-50 transition-transform duration-100"
+        style={{
+          left: mousePosition.x - 12,
+          top: mousePosition.y - 12,
+          transform: `scale(${hoveredCard ? 1.5 : 1})`,
+        }}
+      />
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-6xl mx-auto px-4">
@@ -201,10 +231,15 @@ export default function InteractiveHero({ onSectionChange }: { onSectionChange: 
                       ? `linear-gradient(135deg, ${feature.color.split(" ")[1]}, ${feature.color.split(" ")[3]})`
                       : undefined,
                 }}
+<<<<<<< HEAD
                 onMouseEnter={() => !isMobile && setHoveredCard(feature.id)}
                 onMouseLeave={() => !isMobile && setHoveredCard(null)}
                 onTouchStart={() => setHoveredCard(feature.id)}
                 onTouchEnd={() => setHoveredCard(null)}
+=======
+                onMouseEnter={() => setHoveredCard(feature.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
                 onClick={() => onSectionChange(feature.section)}
               >
                 <CardContent className="p-6 text-center relative overflow-hidden">

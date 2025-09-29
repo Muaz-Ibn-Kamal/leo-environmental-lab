@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { spawn } from "child_process"
 import path from "path"
 
+<<<<<<< HEAD
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -37,6 +38,8 @@ export async function GET(request: NextRequest) {
   }
 }
 
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -472,6 +475,7 @@ function calculateArrayVolatility(values: number[]): number {
 
   return Math.sqrt(variance)
 }
+<<<<<<< HEAD
 
 // Real-time AI prediction functions
 function generateRealTimeEnvironmentalData(countryCode: string) {
@@ -801,3 +805,5 @@ function performRealTimeTrendAnalysis(predictions: any[]) {
     modelPerformance: "optimal",
   }
 }
+=======
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b

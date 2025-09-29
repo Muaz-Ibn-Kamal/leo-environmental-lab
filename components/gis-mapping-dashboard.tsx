@@ -96,10 +96,30 @@ interface CountryEnvironmentalData {
   country: string
   nasaData: {
     modisImagery: string[]
+<<<<<<< HEAD
     firmsData: any[]
     eonetEvents: any[]
     landsat: any[]
     viirs: any[]
+=======
+    firmsData: {
+      latitude: number
+      longitude: number
+      brightness: number
+      confidence: number
+      type: string
+      timestamp: string
+    }[]
+    eonetEvents: any[]
+    landsat: any[]
+    viirs: {
+      id: string
+      type: string
+      coordinates: [number, number]
+      temperature: number
+      confidence: number
+    }[]
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
   }
   predictions: EnvironmentalPrediction[]
   gisLayers: any[]
@@ -476,7 +496,11 @@ export default function GISMappingDashboard() {
     if (!country) return
 
     setIsLoadingCountryData(true)
+<<<<<<< HEAD
     console.log(`[v0] Fetching real-time NASA LEO satellite data for ${country.name}...`)
+=======
+    console.log(` Fetching real-time NASA LEO satellite data for ${country.name}...`)
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 
     try {
       const NASA_API_KEY = "8zbCujw6vfWdakWSEoegergghb3BHPUiI2GJkfd6"
@@ -487,9 +511,40 @@ export default function GISMappingDashboard() {
       yesterday.setDate(yesterday.getDate() - 1)
       const dateStr = yesterday.toISOString().split("T")[0]
 
+<<<<<<< HEAD
       console.log(`[v0] Attempting to fetch from NASA APIs with real API key...`)
 
       const nasaData = {
+=======
+      console.log(` Attempting to fetch from NASA APIs with real API key...`)
+
+      const nasaData: {
+        modisImagery: string[];
+        firmsData: {
+          latitude: number;
+          longitude: number;
+          brightness: number;
+          confidence: number;
+          type: string;
+          timestamp: string;
+        }[];
+        eonetEvents: {
+          id: string;
+          title: string;
+          coordinates: number[];
+          category: string;
+          date: string;
+        }[];
+        landsat: any[];
+        viirs: {
+          id: string;
+          type: string;
+          coordinates: [number, number];
+          temperature: number;
+          confidence: number;
+        }[];
+      } = {
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
         modisImagery: [`/satellite-map-view-bangladesh-terrain-elevation.jpg`],
         firmsData: [],
         eonetEvents: [],
@@ -528,12 +583,20 @@ export default function GISMappingDashboard() {
               }
             })
 
+<<<<<<< HEAD
           console.log(`[v0] Successfully fetched ${nasaData.firmsData.length} real fire points from FIRMS API`)
+=======
+          console.log(` Successfully fetched ${nasaData.firmsData.length} real fire points from FIRMS API`)
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
         } else {
           throw new Error(`FIRMS API returned ${firmsResponse.status}`)
         }
       } catch (firmsError) {
+<<<<<<< HEAD
         console.log(`[v0] FIRMS API fallback - generating realistic fire data`)
+=======
+        console.log(` FIRMS API fallback - generating realistic fire data`)
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
         // Generate realistic fire data as fallback
         const fireCount = Math.floor(Math.random() * 15) + 5
         nasaData.firmsData = Array.from({ length: fireCount }, (_, i) => ({
@@ -573,13 +636,21 @@ export default function GISMappingDashboard() {
             })) || []
 
           console.log(
+<<<<<<< HEAD
             `[v0] Successfully fetched ${nasaData.eonetEvents.length} real environmental events from EONET API`,
+=======
+            ` Successfully fetched ${nasaData.eonetEvents.length} real environmental events from EONET API`,
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
           )
         } else {
           throw new Error(`EONET API returned ${eonetResponse.status}`)
         }
       } catch (eonetError) {
+<<<<<<< HEAD
         console.log(`[v0] EONET API fallback - generating realistic event data`)
+=======
+        console.log(` EONET API fallback - generating realistic event data`)
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
         // Generate environmental events as fallback
         const eventCount = Math.floor(Math.random() * 8) + 2
         nasaData.eonetEvents = Array.from({ length: eventCount }, (_, i) => ({
@@ -638,7 +709,11 @@ export default function GISMappingDashboard() {
         },
       }
 
+<<<<<<< HEAD
       console.log(`[v0] Successfully loaded NASA data for ${country.name}:`, {
+=======
+      console.log(` Successfully loaded NASA data for ${country.name}:`, {
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
         fires: nasaData.firmsData.length,
         events: nasaData.eonetEvents.length,
         viirs: nasaData.viirs.length,
@@ -646,7 +721,11 @@ export default function GISMappingDashboard() {
       })
       setCountryData(environmentalData)
     } catch (error) {
+<<<<<<< HEAD
       console.error(`[v0] Error fetching NASA data:`, error)
+=======
+      console.error(` Error fetching NASA data:`, error)
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
 
       // Provide fallback data even if API calls fail
       const fallbackData: CountryEnvironmentalData = {
@@ -800,7 +879,11 @@ export default function GISMappingDashboard() {
 
   const updateLayerOpacity = (layerId: string, opacity: number) => {
     // Update layer opacity in the mapping system
+<<<<<<< HEAD
     console.log(`[v0] Updating layer ${layerId} opacity to ${opacity}`)
+=======
+    console.log(` Updating layer ${layerId} opacity to ${opacity}`)
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
   }
 
   const togglePredictionModel = (modelId: string) => {
@@ -887,9 +970,15 @@ export default function GISMappingDashboard() {
         ]
 
         setPredictions(predictionData)
+<<<<<<< HEAD
         console.log("[v0] GIS data with predictions loaded:", { elevationData, landCoverData, predictionData })
       } catch (error) {
         console.log("[v0] GIS prediction analysis simulation active")
+=======
+        console.log("GIS data with predictions loaded:", { elevationData, landCoverData, predictionData })
+      } catch (error) {
+        console.log(" GIS prediction analysis simulation active")
+>>>>>>> 348ff9f957c6eb026c815687734db1a3d7ab6a4b
       }
     }
 
